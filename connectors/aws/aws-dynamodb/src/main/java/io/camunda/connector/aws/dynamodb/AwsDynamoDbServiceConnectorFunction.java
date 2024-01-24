@@ -17,16 +17,27 @@ import io.camunda.connector.generator.java.annotation.ElementTemplate;
     inputVariables = {"authentication", "configuration", "input"},
     type = "io.camunda:aws-dynamodb:1")
 @ElementTemplate(
-    id = "aws-dynamodb-connector-aws-dynamodb",
-    name = "Generated AWS DynamoDB Connector",
-    version = 1,
-    description = "Generated AWS DynamoDB Connector",
-    inputDataClass = AwsDynamoDbRequest.class)
+    id = "io.camunda.connectors.AWSDynamoDB.v1",
+    name = "AWS DynamoDB Outbound Connector",
+    version = 7,
+    description = "Work with tables and items using AWS DynamoDB service",
+    documentationRef =
+        "https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/aws-dynamodb/",
+    propertyGroups = {
+      @ElementTemplate.PropertyGroup(id = "operation", label = "Operation"),
+      @ElementTemplate.PropertyGroup(id = "authentication", label = "Authentication"),
+      @ElementTemplate.PropertyGroup(id = "configuration", label = "Queue properties"),
+      @ElementTemplate.PropertyGroup(id = "input", label = "Input")
+    },
+    inputDataClass = AwsDynamoDbRequest.class,
+    icon = "icon.svg")
 public class AwsDynamoDbServiceConnectorFunction implements OutboundConnectorFunction {
 
   @Override
   public Object execute(OutboundConnectorContext context) throws Exception {
     final AwsDynamoDbOperationFactory operationFactory = AwsDynamoDbOperationFactory.getInstance();
+    // todo test old template and if need add support prev template : if version < 7 , then map to
+    // new
     final AwsDynamoDbRequest dynamoDbRequest = context.bindVariables(AwsDynamoDbRequest.class);
     return operationFactory
         .createOperation(dynamoDbRequest.getInput())

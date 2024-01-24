@@ -9,11 +9,11 @@ package io.camunda.connector.aws.dynamodb.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.camunda.connector.generator.java.annotation.TemplateDiscriminatorProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-  // channel
   @JsonSubTypes.Type(value = CreateTable.class, name = "createTable"),
   @JsonSubTypes.Type(value = DeleteTable.class, name = "deleteTable"),
   @JsonSubTypes.Type(value = DescribeTable.class, name = "describeTable"),
@@ -23,4 +23,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = GetItem.class, name = "getItem"),
   @JsonSubTypes.Type(value = UpdateItem.class, name = "updateItem")
 })
-public sealed interface AwsInput permits TableOperation {}
+@TemplateDiscriminatorProperty(
+    name = "operationGroup",
+    group = "operation",
+    label = "Choose category")
+public sealed interface AwsInput permits TableInput, ItemInput {}
